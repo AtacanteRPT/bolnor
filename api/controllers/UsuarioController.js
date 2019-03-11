@@ -84,7 +84,7 @@ module.exports = {
     actualizarPasswords: function(req, res) {
         var nuevoPassword = "";
         Usuario.find().exec(function(err, datoUsuarios) {
-            datoUsuarios.forEach(function(usuario) {
+            async.eachSeries(datoUsuarios, function(usuario, cb) {
                 console.log("usuario:", usuario)
                 nuevoPassword = usuario.username
                 bcrypt.genSalt(10, function(err, salt) {
@@ -93,10 +93,16 @@ module.exports = {
                             password: hash
                         }).exec(function(err, datoUsuario) {
                             console.log("FIN*****", usuario)
+                            cb();
                         })
                     });
                 });
-            }, this);
+            }, function(error) {
+
+                sails.log("-------------------FINAL LISTA -----------------------")
+
+
+            });
 
         })
 
