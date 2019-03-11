@@ -90,7 +90,7 @@ module.exports = {
                         Usuario.update(usuario.id).set({
                             password: hash
                         }).exec(function(err, datoUsuario) {
-
+                            conole.log(usuario)
                         })
                     });
                 });
