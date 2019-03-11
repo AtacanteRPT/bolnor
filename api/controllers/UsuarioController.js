@@ -90,13 +90,14 @@ module.exports = {
                         Usuario.update(usuario.id).set({
                             password: hash
                         }).exec(function(err, datoUsuario) {
-                            res.json({
-                                mensaje: 'se a reseteado el password'
-                            })
+
                         })
                     });
                 });
             }, this);
+            res.json({
+                mensaje: 'se a reseteado el password'
+            })
         })
     },
 
