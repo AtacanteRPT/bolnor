@@ -96,9 +96,11 @@ module.exports = {
                     });
                 });
             }, this);
-            res.json({
-                mensaje: 'se a reseteado el password'
-            })
+
+        })
+
+        res.json({
+            mensaje: 'se a reseteado el password'
         })
     },
 
