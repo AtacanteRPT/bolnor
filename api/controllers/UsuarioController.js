@@ -12,94 +12,108 @@ var moment = require('moment')
 
 module.exports = {
 
-  cambiarPassword: function (req, res) {
-    var actualPassword = req.param("actualPassword"),
-      nuevoPassword = req.param("nuevoPassword")
-    Usuario.findOne({
-      idPersona: req.user.id
-    }).exec(function (err, user) {
+    cambiarPassword: function(req, res) {
+        var actualPassword = req.param("actualPassword"),
+            nuevoPassword = req.param("nuevoPassword")
+        Usuario.findOne({
+            idPersona: req.user.id
+        }).exec(function(err, user) {
 
-      console.log("PASSWORD", user.password)
-      bcrypt.compare(actualPassword, user.password, function (err, datoPass) {
-        if (!datoPass) {
-          res.status(403)
-          res.json({
-            mensaje: "password actual incorrecto "
-          })
-        }
-        bcrypt.genSalt(10, function (err, salt) {
-          bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
-            Usuario.update(
-              user.id
-            ).set({
-              password: hash
-            }).exec(function (err, datoUsuario) {
-              if (err) {
-                return res.serverError(err);
-              }
-              res.json({
-                mensaje: 'cambio de password exitoso'
-              })
-            })
-          });
+            console.log("PASSWORD", user.password)
+            bcrypt.compare(actualPassword, user.password, function(err, datoPass) {
+                if (!datoPass) {
+                    res.status(403)
+                    return res.json({
+                        mensaje: "password actual incorrecto "
+                    })
+                }
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(nuevoPassword, salt, null, function(err, hash) {
+                        Usuario.update(
+                            user.id
+                        ).set({
+                            password: hash
+                        }).exec(function(err, datoUsuario) {
+                            if (err) {
+                                return res.serverError(err);
+                            }
+                            res.json({
+                                mensaje: 'cambio de password exitoso'
+                            })
+                        })
+                    });
+                });
+                // sails.log("Passport.js - userDetails", userDetails)
+            });
         });
-        // sails.log("Passport.js - userDetails", userDetails)
-      });
-    });
 
-  },
-  resetearPassword: function (req, res) {
-    var id = req.param("id")
-    var nuevoPassword = "";
-    Usuario.findOne({
-      idPersona: id
-    }).exec(function (err, datoUsuario) {
-      nuevoPassword = datoUsuario.username
-      bcrypt.genSalt(10, function (err, salt) {
-        bcrypt.hash(nuevoPassword, salt, null, function (err, hash) {
-          Usuario.update(datoUsuario.id).set({
-            password: hash
-          }).exec(function (err, datoUsuario) {
-            res.json({
-              mensaje: 'se a reseteado el password'
+    },
+    resetearPassword: function(req, res) {
+        var id = req.param("id")
+        var nuevoPassword = "";
+        Usuario.findOne({
+            idPersona: id
+        }).exec(function(err, datoUsuario) {
+            nuevoPassword = datoUsuario.username
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(nuevoPassword, salt, null, function(err, hash) {
+                    Usuario.update(datoUsuario.id).set({
+                        password: hash
+                    }).exec(function(err, datoUsuario) {
+                        res.json({
+                            mensaje: 'se a reseteado el password'
+                        })
+                    })
+                });
+            });
+        })
+    },
+
+    actualizarPassword: function(req, res) {
+
+        Usuario.find().populate('idPersona').exec(function(err, datoUsuarios) {
+            datoUsuarios.forEach(function(usuario) {
+                Usuario.update(usuario.id).set({ username: usuario.idPersona.identificacion }).then(dato => {
+                    console.log('USUARIO', usuario)
+                }).catch(err => {
+                    return res.serverError(err);
+                })
+            }, this);
+        })
+    },
+
+
+    otro: function(req, res) {
+        var horaActual = moment().format('LTS')
+
+        Asistencia.update({
+                idPersona: 1
+            }).set({
+                hora_salida: horaActual
             })
-          })
-        });
-      });
-    })
-  },
+            .fecth().exec((err, datoAsistencia2) => {
+                console.log('actualizado', datoAsistencia2)
 
-  otro: function (req, res) {
-    var horaActual = moment().format('LTS')
+                auxAlumno = {
+                    identificacion: actualIdentificacion,
+                    materno: resultado.materno,
+                    paterno: resultado.paterno,
+                    nombre: resultado.nombre,
+                    curso: resultado.grupo + " " + resultado.paralelo,
+                    turno: resultado.turno,
+                    img: resultado.img,
+                    hora_llegada: datoAsistencia2[0].hora_llegada,
+                    hora_salida: datoAsistencia2[0].hora_salida
+                }
 
-    Asistencia.update({
-        idPersona: 1
-      }).set({
-        hora_salida: horaActual
-      })
-      .fecth().exec((err, datoAsistencia2) => {
-        console.log('actualizado', datoAsistencia2)
+                // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
+                //     // handle response
+                //     sails.log("se enviò una notificaciòn")
+                // });
 
-        auxAlumno = {
-          identificacion: actualIdentificacion,
-          materno: resultado.materno,
-          paterno: resultado.paterno,
-          nombre: resultado.nombre,
-          curso: resultado.grupo + " " + resultado.paralelo,
-          turno: resultado.turno,
-          img: resultado.img,
-          hora_llegada: datoAsistencia2[0].hora_llegada,
-          hora_salida: datoAsistencia2[0].hora_salida
-        }
-
-        // rest.postJson(DOMINIO + 'persona/notificar', { id: datoPersona.id, mensaje: " Hora Salida : " + datoAsistencia.hora_salida }).on('complete', function (data3, response3) {
-        //     // handle response
-        //     sails.log("se enviò una notificaciòn")
-        // });
-
-        res.send(auxAlumno);
-      })
-  }
+                res.send(auxAlumno);
+            })
+    }
 
 
 }
