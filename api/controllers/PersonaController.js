@@ -361,7 +361,7 @@ module.exports = {
                     "foo": "bar"
                 };
                 firstNotification.postBody["headings"] = {
-                    "en": datosDispositivos[0].idPersona.nombre + datosDispositivos[0].idPersona.paterno + datosDispositivos[0].idPersona.materno
+                    "en": datosDispositivos[0].idPersona.nombre + " " + datosDispositivos[0].idPersona.paterno + " " + datosDispositivos[0].idPersona.materno
                 };
 
                 // Add a new target after creating initial notification body  
