@@ -84,13 +84,14 @@ module.exports = {
     actualizarPasswords: function(req, res) {
         Usuario.find().populate('idPersona').exec(function(err, datoUsuarios) {
             datoUsuarios.forEach(function(usuario) {
+                console.log("usuario:", usuario)
                 var nuevoPassword = usuario.username
                 bcrypt.genSalt(10, function(err, salt) {
                     bcrypt.hash(nuevoPassword, salt, null, function(err, hash) {
                         Usuario.update(usuario.id).set({
                             password: hash
                         }).exec(function(err, datoUsuario) {
-                            console.log(usuario)
+                            console.log("FIN*****", usuario)
                         })
                     });
                 });
