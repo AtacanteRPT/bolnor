@@ -368,8 +368,8 @@ module.exports = {
 
         var idTurno = req.param("id")
 
-        rest.get(DOMINIO_A2HOSTING + 'curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
-                sails.log(result.grados[2])
+        rest.get(DOMINIO + 'curso/mostrar_turno2/' + idTurno).on('complete', function(result) {
+                // sails.log(result.grados[2])
                 auxLista = result;
                 var auxGrados = []
                 async.each(result.grados, function(grado, cb) {
@@ -450,13 +450,13 @@ module.exports = {
     },
     migrarCurso: function(req, res) {
 
-        var idCurso2018 = req.param('antes');
-        var idCurso2019 = req.param('despues');
-        Inscribe.find({ idCurso: idCurso2018, idGestionAcademica: 1 }).exec((err, datoInscripciones) => {
+        var idCurso2019 = req.param('antes');
+        var idCurso2020 = req.param('despues');
+        Inscribe.find({ idCurso: idCurso2019, idGestionAcademica: 1 }).exec((err, datoInscripciones) => {
             if (err) { return res.serverError(err); }
             async.each(datoInscripciones, function(inscripcion, cb) {
 
-                Inscribe.create({ idGestionAcademica: 2, idCurso: idCurso2019, idAlumno: inscripcion.idAlumno }).fetch().exec(function(err, datoInscripcion) {
+                Inscribe.create({ idGestionAcademica: 2, idCurso: idCurso2020, idAlumno: inscripcion.idAlumno }).fetch().exec(function(err, datoInscripcion) {
                     console.log("CURSO ACTUALIZADO", datoInscripcion)
                     cb()
                 });
@@ -468,7 +468,6 @@ module.exports = {
             });
 
         });
-
 
     }
 

@@ -84,6 +84,7 @@ module.exports = {
                 sexo: req.param('sexo'),
                 rol: req.param('rol'),
                 nro: req.param('nro'),
+                img: req.param('img'),
                 codigoFoto: req.param('codigoFoto')
             }
             // sails.log("NUEVA PERSONA", nuevaPersona)
@@ -99,21 +100,22 @@ module.exports = {
                 case 'alumno':
                     Alumno.create({
                         idPersona: datoPersona.id
-                    }).exec(function(err, creado) {
+                    }).fetch().exec(function(err, creado) {
                         if (err) {
                             return res.serverError(err);
                         }
+                        var identificacion = datoPersona.paterno.charAt(0) + datoPersona.materno.charAt(0) + datoPersona.nombre.charAt(0)
 
                         usuario = {
 
-                            username: datoPersona.id + datoPersona.nombre,
-                            password: datoPersona.id + datoPersona.nombre,
+                            username: datoPersona.id + identificacion,
+                            password: datoPersona.id + identificacion,
                             codigo_qr: datoPersona.nombre + " " + datoPersona.paterno + " " + datoPersona.materno,
                             rol: rol,
                             idPersona: datoPersona.id
                         }
 
-                        Usuario.create(usuario).exec(function(err, creado) {
+                        Usuario.create(usuario).fetch().exec(function(err, creado) {
                             if (err) {
                                 return res.serverError(err);
                             }

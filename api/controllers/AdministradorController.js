@@ -455,134 +455,133 @@ module.exports = {
         });
         res.send('NADA')
     },
-    adicionarPersonasAmerinst: function(req, res) {
+    // adicionarPersonasAmerinst: function(req, res) {
 
-        var files = [];
-        req.file('files').upload({
-            // ~10MB
-            dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda'),
-            saveAs: function(__newFileStream, cb) {
-                cb(null, "TM" + __newFileStream.filename);
-            },
-            maxBytes: 10000000
-        }, function whenDone(err, uploadedFiles) {
+    //     var files = [];
+    //     req.file('files').upload({
+    //         // ~10MB
+    //         dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/nestorPeñaranda'),
+    //         saveAs: function(__newFileStream, cb) {
+    //             cb(null, "TM" + __newFileStream.filename);
+    //         },
+    //         maxBytes: 10000000
+    //     }, function whenDone(err, uploadedFiles) {
 
-            if (err) {
-                return res.negotiate(err);
-            }
+    //         if (err) {
+    //             return res.negotiate(err);
+    //         }
 
-            // If no files were uploaded, respond with an error.
-            if (uploadedFiles.length === 0) {
-                return res.badRequest('No file was uploaded');
-            }
-
-
-            async.eachSeries(uploadedFiles, function(file, callback) {
-
-                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-
-                sails.log(file)
-                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                var nuevasPersonas = [];
-                var dato = fs.readFileSync(file.fd, {
-                    encoding: 'utf8'
-                });
-                var options = {
-                    delimiter: ',', // optional
-                    quote: '"' // optional
-                };
-
-                nuevasPersonas = csvjson.toObject(dato, options);
-
-                async.each(nuevasPersonas, function(persona, cb) {
-
-                    // nuevasPersonas.forEach(function (persona) {
-                    if (persona.Estudiante.length > 0) {
+    //         // If no files were uploaded, respond with an error.
+    //         if (uploadedFiles.length === 0) {
+    //             return res.badRequest('No file was uploaded');
+    //         }
 
 
-                        // sails.log("PERRSONA", persona);
-                        var nombreCompleto = persona.Estudiante.split(" ");
+    //         async.eachSeries(uploadedFiles, function(file, callback) {
 
-                        persona.paterno = nombreCompleto[0]
-                        persona.materno = nombreCompleto[1]
+    //             sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-                        if (nombreCompleto.length == 3) {
-                            persona.nombre = nombreCompleto[2]
-                        } else if (nombreCompleto.length == 4) {
-                            persona.nombre = nombreCompleto[2] + " " + nombreCompleto[3]
-                        } else {
-                            var auxNombre = "";
-                            for (var index = 2; index < nombreCompleto.length; index++) {
-                                auxNombre = auxNombre + " " + nombreCompleto[index]
-                            }
-                            persona.nombre = auxNombre;
-                        }
+    //             sails.log(file)
+    //             sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    //             var nuevasPersonas = [];
+    //             var dato = fs.readFileSync(file.fd, {
+    //                 encoding: 'utf8'
+    //             });
+    //             var options = {
+    //                 delimiter: ',', // optional
+    //                 quote: '"' // optional
+    //             };
 
-                        persona.idCurso = req.param("idCurso");
-                        persona.nro = persona.Número;
-                        persona.codigoFoto = persona.Código
+    //             nuevasPersonas = csvjson.toObject(dato, options);
 
-                        persona.rol = "alumno"
-                        sails.log("Persona desde el CSV", persona)
-                            // identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
-                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
-                            // handle response
-                            console.log('Persona Creada', data)
-                            if (persona.idCurso.length > 0) {
-                                rest.postJson('http://localhost:1337/inscribe/inscribir', {
-                                    id: data.id,
-                                    idCurso: persona.idCurso,
-                                    idGestionAcademica: 1
-                                }).on('complete', function(data2, response2) {
-                                    // handle response
-                                    console.log('inscrito Creada', data2)
+    //             async.each(nuevasPersonas, function(persona, cb) {
 
-                                });
-
-                                cb();
-                            }
-                            // Persona.findOne({ identificacion: persona.codigoFoto }).exec(function (err, datoALumno) {
-
-                            //     sails.log("personaEncontrada:", datoALumno)
-                            //     rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: data.id, idAlumno: datoALumno.id }).on('complete', function (data2, response2) {
-                            //         // handle response
-                            //         console.log('tutor adicionado', data2)
-
-                            //     });
-
-                            // })
-
-                        });
-                    } else {
-                        cb();
-                    }
+    //                 // nuevasPersonas.forEach(function (persona) {
+    //                 if (persona.Estudiante.length > 0) {
 
 
-                    // }, this);
-                }, function(error) {
+    //                     // sails.log("PERRSONA", persona);
+    //                     var nombreCompleto = persona.Estudiante.split(" ");
 
-                    sails.log("-------------------FINAL LISTA -----------------------")
-                    callback(null);
-                    // return res.send("tutores")
-                });
+    //                     persona.paterno = nombreCompleto[0]
+    //                     persona.materno = nombreCompleto[1]
 
-            }, function(error) {
-                rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function(data2, response2) {
-                    rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + req.param("idCurso")).on('complete', function(data, response) {
-                        // handle response
-                        res.send("TODO A ACABADO")
+    //                     if (nombreCompleto.length == 3) {
+    //                         persona.nombre = nombreCompleto[2]
+    //                     } else if (nombreCompleto.length == 4) {
+    //                         persona.nombre = nombreCompleto[2] + " " + nombreCompleto[3]
+    //                     } else {
+    //                         var auxNombre = "";
+    //                         for (var index = 2; index < nombreCompleto.length; index++) {
+    //                             auxNombre = auxNombre + " " + nombreCompleto[index]
+    //                         }
+    //                         persona.nombre = auxNombre;
+    //                     }
 
-                    });
+    //                     persona.idCurso = req.param("idCurso");
+    //                     persona.nro = persona.Número;
+    //                     persona.codigoFoto = persona.Código
 
-                });
-            });
+    //                     persona.rol = "alumno"
+    //                     sails.log("Persona desde el CSV", persona)
+    //                         // identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0) + persona.codigoFoto
+    //                     rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+    //                         // handle response
+    //                         console.log('Persona Creada', data)
+    //                         if (persona.idCurso.length > 0) {
+    //                             rest.postJson('http://localhost:1337/inscribe/inscribir', {
+    //                                 id: data.id,
+    //                                 idCurso: persona.idCurso,
+    //                                 idGestionAcademica: 1
+    //                             }).on('complete', function(data2, response2) {
+    //                                 // handle response
+    //                                 console.log('inscrito Creada', data2)
+
+    //                             });
+
+    //                             cb();
+    //                         }
+    //                         // Persona.findOne({ identificacion: persona.codigoFoto }).exec(function (err, datoALumno) {
+
+    //                         //     sails.log("personaEncontrada:", datoALumno)
+    //                         //     rest.postJson('http://localhost:1337/alumno/adicionar_tutor', { idTutor: data.id, idAlumno: datoALumno.id }).on('complete', function (data2, response2) {
+    //                         //         // handle response
+    //                         //         console.log('tutor adicionado', data2)
+
+    //                         //     });
+
+    //                         // })
+
+    //                     });
+    //                 } else 
+    //                     cb();
+    //                 }
+
+    //                 // }, this);
+    //             }, function(error) {
+
+    //                 sails.log("-------------------FINAL LISTA -----------------------")
+    //                 callback(null);
+    //                 // return res.send("tutores")
+    //             });
+
+    //         }, function(error) {
+    //             rest.get('http://localhost:1337/administrador/actualizarIdentificaciones').on('complete', function(data2, response2) {
+    //                 rest.get('http://localhost:1337/administrador/alumnosCursoQr/' + req.param("idCurso")).on('complete', function(data, response) {
+    //                     // handle response
+    //                     res.send("TODO A ACABADO")
+
+    //                 });
+
+    //             });
+    //         });
 
 
-        });
+    //     });
 
 
 
-    },
+    // },
     adicionarPersonasDomingoSavio: function(req, res) {
 
         var files = [];
@@ -762,7 +761,7 @@ module.exports = {
         var files = [];
         req.file('files').upload({
             // ~10MB
-            dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/DomingoSavio'),
+            dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/bolnor'),
             saveAs: function(__newFileStream, cb) {
                 cb(null, "TT" + __newFileStream.filename);
             },
@@ -843,11 +842,11 @@ module.exports = {
                             }
 
 
-                            Persona.update(data.id, {
+                            Persona.update(data.id,  {
                                 identificacion: data.id + "-" + identificacion
                             }).fetch().exec(function(err, datoAlumno) {
 
-                                var codigoQr = datoAlumno[0].identificacion + '$2019$' + 'BOLIVIANO NORUEGO'
+                                var codigoQr = datoAlumno[0].identificacion + '$2020$' + 'BOLIVIANO NORUEGO'
                                 var code = qr.image(codigoQr, {
                                     type: 'png'
                                 });
@@ -909,6 +908,143 @@ module.exports = {
 
 
     },
+
+    adicionarNuevosPersonasBolnor: function(req, res) {
+
+     
+
+          
+            var cursoId = 1;
+            var csvFilePath = '../.././tt_nuevos_bolnor_2020.csv'
+
+
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                sails.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                var nuevasPersonas = [];
+                var dato = fs.readFileSync(path.join(__dirname, csvFilePath), {
+                    encoding: 'utf8'
+                });
+                var options = {
+                    delimiter: ',', // optional
+                    quote: '"' // optional
+                };
+
+                nuevasPersonas = csvjson.toObject(dato, options);
+
+
+                var listaNuevaCurso = [];
+                var auxPadre = {
+                    nro: "nro",
+                    paterno: "paterno",
+                    materno: "materno",
+                    nombre: "nombre",
+                    codigoFoto: "codigoFoto",
+                    curso:"curso",
+                    identificacion: "identificacion",
+                    idCurso: "idCurso"
+                }
+
+
+                listaNuevaCurso.push(auxPadre)
+
+                async.eachSeries(nuevasPersonas, function(persona, cb) {
+
+                    // nuevasPersonas.forEach(function (persona) {
+                    if (persona.paterno.length > 0) {
+
+
+                        // persona.idCurso = req.param("idCurso");
+                        // persona.nro = persona.Número;
+                        // persona.codigoFoto = persona.Código
+                        
+                        persona.rol = "alumno"
+                        persona.img="avatars//"+persona.codigoFoto;
+                        var auxNombre = persona.nombre + ' ' + persona.nombre2
+                        persona.nombre = auxNombre
+                        sails.log("Persona desde el CSV", persona)
+                        cursoId = persona.idCurso;
+                        var identificacion = persona.paterno.charAt(0) + persona.materno.charAt(0) + persona.nombre.charAt(0)
+                        rest.postJson('http://localhost:1337/api/persona', persona).on('complete', function(data, response) {
+                            // handle response
+                            console.log('Persona Creada', data)
+                            if (persona.idCurso.length > 0) {
+
+                                rest.postJson('http://localhost:1337/inscribe/inscribir', {
+                                    id: data.id,
+                                    idCurso: persona.idCurso,
+                                    idGestionAcademica: 2
+                                }).on('complete', function(data2, response2) {
+                                    // handle response
+                                    console.log('inscrito Creada', data2)
+
+                                });
+
+                            }
+
+
+                            Persona.update(data.id,  {
+                                identificacion: data.id + "-" + identificacion
+                            }).fetch().exec(function(err, datoAlumno) {
+                                console.log('PERSONA ACTUALIZADA',datoAlumno)
+                                var codigoQr = datoAlumno[0].identificacion + '$2020$' + 'BOLIVIANO NORUEGO'
+                                var code = qr.image(codigoQr, {
+                                    type: 'png'
+                                });
+                                sails.log("personaEncontrada:", datoAlumno[0])
+
+                                var dir = './assets/codigos/bolnor_nuevos/turno_ma/';
+                                persona.identificacion = datoAlumno[0].identificacion
+                                listaNuevaCurso.push(persona)
+                                if (!fs.existsSync(dir)) {
+                                    fs.mkdirSync(dir);
+
+                                }
+
+                                var output = fs.createWriteStream(path.join(__dirname, '../../' + dir + datoAlumno[0].nro + '.jpg'))
+
+                                code.pipe(output);
+
+
+                                cb();
+                            })
+
+                        });
+                    } else {
+                        cb();
+                    }
+
+
+                    // }, this);
+                }, function(error) {
+                    if (listaNuevaCurso.length > 1) {
+                        stringify(listaNuevaCurso, function(err, output) {
+                            fs.writeFile("t" + file.filename, output, 'utf8', function(err) {
+                                if (err) {
+                                    console.log('Some error occured - file either not saved or corrupted file saved.');
+                                } else {
+                                    console.log('It\'s saved!');
+                                }
+                            });
+                        });
+                    }
+
+                    sails.log("-------------------FINAL LISTA -----------------------")
+                    callback(null);
+                    // return res.send("tutores")
+                });
+
+
+        res.send("esperando...")
+
+
+    },
+
+
+
+
+
+
     generarCodigosDomingoSavio: function(req, res) {
         Persona.find({
             id: {
@@ -1098,7 +1234,8 @@ module.exports = {
 
         var curso = req.param('id')
         Inscribe.find({
-            idCurso: curso
+            idCurso: curso,
+            idGestionAcademica:2
         }).populate('idAlumno').populate('idCurso').exec(function(err, inscripciones) {
 
             Curso.findOne(curso).populate('idTurno').populate('idGrado').populate('idGrupo').populate('idParalelo').exec(function(err, datoCurso) {
@@ -1108,12 +1245,12 @@ module.exports = {
                     Persona.findOne(inscripcion.idAlumno.idPersona).exec(function(err, alumno) {
 
                         // var codigoQr = alumno.identificacion + '$2018$' + 'Instituto Americano Nestor Peñaranda'
-                        var codigoQr = alumno.identificacion + '$2018$' + 'Colegio Domingo Savio '
+                        var codigoQr = alumno.identificacion + '$2020$' + 'Boliviano Noruego'
                         var code = qr.image(codigoQr, {
                             type: 'png'
                         });
 
-                        var dir = './assets/codigos/domingo_savio/' + datoCurso.idTurno.nombre + "_" + datoCurso.idGrado.nombre + "_" + datoCurso.idGrupo.nombre + "_" + datoCurso.idParalelo.nombre + "/"
+                        var dir = './assets/codigos/bolnor2020/' + datoCurso.idTurno.nombre + "_" + datoCurso.idGrado.nombre + "_" + datoCurso.idGrupo.nombre + "_" + datoCurso.idParalelo.nombre + "/"
                         if (!fs.existsSync(dir)) {
                             fs.mkdirSync(dir);
 
