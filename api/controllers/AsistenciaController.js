@@ -153,7 +153,7 @@ module.exports = {
                                 estado: 'asistió',
                                 hora_llegada: horaActual,
                                 hora_salida: horaActual,
-                                idGestionAcademica: 1,
+                                idGestionAcademica: 2,
                                 idPersona: resultado.idPersona
                             }).fetch().exec((err, datoAsistencia) => {
                                 if (err) {
@@ -286,7 +286,7 @@ module.exports = {
                             estado: 'asistió',
                             hora_llegada: horaActual,
                             hora_salida: horaActual,
-                            idGestionAcademica: 1,
+                            idGestionAcademica: 2,
                             idPersona: datoPersona.id
                         }).fetch().exec((err, datoAsistencia) => {
                             if (err) {

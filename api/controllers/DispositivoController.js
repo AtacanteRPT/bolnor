@@ -100,7 +100,7 @@ module.exports = {
                                     hora_llegada: horaActual,
                                     hora_salida: horaActual,
 
-                                    idGestionAcademica: 1,
+                                    idGestionAcademica: 2,
                                     idPersona: resultado.idPersona
                                 }
 
