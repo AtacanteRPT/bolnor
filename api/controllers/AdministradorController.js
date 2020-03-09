@@ -1642,14 +1642,31 @@ module.exports = {
 
 
     },
-    fotosFaltantesNestor: function(req, res) {
+    fotosFaltantesBolnor: function(req, res) {
         Persona.find({
-            codigoFoto: ""
-        }).exec(function(err, datosPersona) {
+                        img: {
+                            'contains': 'http'
+                        }
+                    },
+    ).exec(function(err, datosPersona) {
 
 
             console.log("faltan un total de ", datosPersona.length)
-            res.send(datosPersona)
+
+            async.eachSeries(datosPersona, function(persona, callback) {
+                var auxImg = persona.img
+                var rutaImg = auxImg.split('/avatars')[1]
+                Persona.update(persona.id,{img: 'avatars'+rutaImg}).exec(function(error,datoUpdate){
+                    callback()
+
+                    console.log(rutaImg)
+                })
+            }, function(error){
+
+                res.send(datosPersona)
+            })
+
+
 
         })
 
