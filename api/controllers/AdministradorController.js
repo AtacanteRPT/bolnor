@@ -758,12 +758,12 @@ module.exports = {
     },
     adicionarPersonasBolNorAutomatico: function(req, res) {
 
-        var files = [];
+        // var files = [];
         req.file('files').upload({
             // ~10MB
             dirname: require('path').resolve(sails.config.appPath, 'assets/cvs/bolnor'),
             saveAs: function(__newFileStream, cb) {
-                cb(null, "TT" + __newFileStream.filename);
+                cb(null, "LB" + __newFileStream.filename);
             },
             maxBytes: 10000000
         }, function whenDone(err, uploadedFiles) {
@@ -789,7 +789,7 @@ module.exports = {
                     encoding: 'utf8'
                 });
                 var options = {
-                    delimiter: ',', // optional
+                    delimiter: ';', // optional
                     quote: '"' // optional
                 };
 
@@ -846,7 +846,7 @@ module.exports = {
                                 identificacion: data.id + "-" + identificacion
                             }).fetch().exec(function(err, datoAlumno) {
 
-                                var codigoQr = datoAlumno[0].identificacion + '$2020$' + 'BOLIVIANO NORUEGO'
+                                var codigoQr = datoAlumno[0].identificacion + '$2022$' + 'BOLIVIANO NORUEGO'
                                 var code = qr.image(codigoQr, {
                                     type: 'png'
                                 });
@@ -904,7 +904,7 @@ module.exports = {
 
 
         });
-        res.send("esperando...")
+        res.send("esperando...123456")
 
 
     },

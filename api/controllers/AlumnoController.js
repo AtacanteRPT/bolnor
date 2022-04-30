@@ -162,7 +162,7 @@ module.exports = {
             idGrado: req.query.idGrado,
             idGrupo: req.query.idGrupo
         };
-        var gestionActual = 2;
+        var gestionActual = 1;
         console.log('TODO QUERY', req.query)
         var asistenciasCurso = []
 

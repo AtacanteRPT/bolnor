@@ -324,13 +324,13 @@ module.exports = {
 
             var myClient = new OneSignal.Client({
                 // userAuthKey: 'MGI1ODliM2QtYmU2NC00ZjgzLWIwM2EtOWYxNjI0NmI3MTVj',
-                userAuthKey: 'OTI0Njc4NjktZDc5MS00ZDlkLWFlYTktNGYyM2MxYTAxYjhm',
+                userAuthKey: 'Mjc4YTQxYTgtYmVmYi00NGIyLWI5YTUtZTU4MGU4NDJlNTQz',
                 // note that "app" must have "appAuthKey" and "appId" keys    
                 app: {
                     // appAuthKey: 'ZmEzNzdmNjktMzQ0Ny00Y2IxLTk2YTMtNWU3MGYwNWFjNzUz',
-                    appAuthKey: 'YTA5NDVlM2MtOWFhZi00NzA5LTg1ZjUtNWU2NDA4ZWI0YTEy',
+                    appAuthKey: 'YjNkMTBkNGItMmZlMy00NmQzLTlmZmItZGZlM2Y2MWExOTY4',
                     // appId: 'e338a31b-4667-471e-9a1a-4aa0c3cf6d5f'
-                    appId: '06db2487-850b-4687-a7d2-7e8c14f4d71d'
+                    appId: '09376b79-ed9d-49be-8db5-f868112e1c3c'
                 }
             });
 
