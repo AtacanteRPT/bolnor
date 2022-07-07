@@ -11,7 +11,7 @@
         "csv-stringify": "^3.0.0",
         "csvjson": "^5.0.0",
         "csvtojson": "^1.1.9",
-        "moment": "^2.20.1",
+        "moment": "^2.29.4",
         "moment-timezone": "^0.5.23",
         "nodemon": "^1.18.3",
         "onesignal-node": "^2.0.0",
