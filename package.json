@@ -12,7 +12,7 @@
         "csvjson": "^5.0.0",
         "csvtojson": "^1.1.9",
         "moment": "^2.20.1",
-        "moment-timezone": "^0.5.23",
+        "moment-timezone": "^0.5.35",
         "nodemon": "^1.18.3",
         "onesignal-node": "^2.0.0",
         "passport": "^0.4.0",
