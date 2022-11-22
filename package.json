@@ -22,9 +22,9 @@
         "restler": "^3.4.0",
         "sails": "^1.0.1",
         "sails-hook-orm": "^2.0.0-16",
-        "sails-hook-sockets": "^1.4.0",
+        "sails-hook-sockets": "^2.0.3",
         "sails-mysql": "^1.0.0",
-        "socket.io": "^2.0.4",
+        "socket.io": "^2.5.0",
         "unirest": "^0.5.1"
     },
     "devDependencies": {
